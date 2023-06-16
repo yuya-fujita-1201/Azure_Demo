@@ -1,6 +1,7 @@
 const express = require('express');
 const sql = require('mssql');
-const ODataServer = require("simple-odata-server");
+const ODataServer = require('simple-odata-server');
+const cors = require('cors');
 
 const app = express();
 
@@ -33,6 +34,8 @@ const config = {
     }
 };
 
+app.use(cors());
+
 app.use("/odata", function (req, res) {
     req.dbPool = sql.connect(config);
     odataServer.handle(req, res);
@@ -42,4 +45,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, function () {
     console.log(`OData service is running on port ${port}`);
 });
-
