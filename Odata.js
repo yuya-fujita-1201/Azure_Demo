@@ -35,6 +35,7 @@ const config = {
     }
 };
 
+/*
 app.use("/odata", function (req, res, next) {
     req.dbPool = sql.connect(config);
     odataServer.error((err, req, res, next) => {
@@ -43,6 +44,13 @@ app.use("/odata", function (req, res, next) {
     });
     odataServer.handle(req, res);
 });
+*/
+
+app.use('/odata', function (req, res, next) {
+    console.log('Before ODataServer handler');
+    next();
+});
+
 
 
 app.get('/', (req, res) => { // <-- 追加
