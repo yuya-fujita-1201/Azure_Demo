@@ -35,13 +35,28 @@ const config = {
     }
 };
 
-app.use("/odata", function (req, res) {
+app.use("/odata", function (req, res, next) {
     req.dbPool = sql.connect(config);
+    odataServer.error((err, req, res, next) => {
+        console.error('OData error: ', err);
+        next(err);
+    });
     odataServer.handle(req, res);
 });
 
+
 app.get('/', (req, res) => { // <-- 追加
   res.status(200).send('OK');
+});
+
+app.get('/test', async (req, res) => {
+    try {
+        await sql.connect(config);
+        const result = await sql.query`SELECT * FROM MyTable`;
+        res.json(result.recordset);
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
 });
 
 const port = process.env.PORT || 80;
