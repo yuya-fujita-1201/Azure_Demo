@@ -10,7 +10,7 @@ const model = {
     namespace: "mySampleDatabase",
     entityTypes: {
         "MyTableType": {
-            "_id": {"type": "Edm.String", key: true},
+            "KeyValue": {"type": "Edm.String", key: true},
             "Item1": {"type": "Edm.String"},
             "Item2": {"type": "Edm.String"},
             "Item3": {"type": "Edm.String"}
