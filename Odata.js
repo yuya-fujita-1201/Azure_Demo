@@ -1,8 +1,10 @@
 const express = require('express');
 const sql = require('mssql');
 const ODataServer = require("simple-odata-server");
+const cors = require('cors'); // <-- 追加
 
 const app = express();
+app.use(cors()); // <-- 追加
 
 const model = {
     namespace: "mySampleDatabase",
