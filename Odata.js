@@ -55,7 +55,7 @@ app.use("/odata", function (req, res, next) {
         });
     }).catch(error => {
         console.error('Error connecting to SQL Server:', error);
-        res.status(500).send('Error connecting to SQL Server: ' + error.message);
+        // Don't try to send a HTTP response here because it might already have been sent by odataServer.handle().
     });
 });
 
