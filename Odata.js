@@ -1,7 +1,6 @@
 const express = require('express');
 const sql = require('mssql');
-const ODataServer = require('simple-odata-server');
-const cors = require('cors');
+const ODataServer = require("simple-odata-server");
 
 const app = express();
 
@@ -34,11 +33,13 @@ const config = {
     }
 };
 
-app.use(cors());
-
 app.use("/odata", function (req, res) {
     req.dbPool = sql.connect(config);
     odataServer.handle(req, res);
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
 });
 
 const port = process.env.PORT || 3000;
