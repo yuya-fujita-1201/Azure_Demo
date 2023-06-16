@@ -35,31 +35,22 @@ const config = {
     }
 };
 
-/*
-app.use("/odata", function (req, res, next) {
-    req.dbPool = sql.connect(config);
-    odataServer.error((err, req, res, next) => {
-        console.error('OData error: ', err);
-        next(err);
-    });
-    odataServer.handle(req, res);
-});
-*/
-
-app.use("/odata", function (req, res, next) {
+app.use("/odata", function (req, res) {
     sql.connect(config).then(pool => {
         console.log('Connected to SQL Server successfully.');
         req.dbPool = pool;
+        odataServer.query((sql, sqlParams) => {
+            return pool.request().query(sql);
+        });
         odataServer.handle(req, res).catch(error => {
             console.error('Error handling OData request:', error);
         });
     }).catch(error => {
         console.error('Error connecting to SQL Server:', error);
-        // Don't try to send a HTTP response here because it might already have been sent by odataServer.handle().
     });
 });
 
-app.get('/', (req, res) => { // <-- 追加
+app.get('/', (req, res) => {
   res.status(200).send('OK');
 });
 
