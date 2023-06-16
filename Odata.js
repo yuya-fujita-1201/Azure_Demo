@@ -46,12 +46,18 @@ app.use("/odata", function (req, res, next) {
 });
 */
 
-app.use('/odata', function (req, res, next) {
-    console.log('Before ODataServer handler');
-    next();
+app.use("/odata", function (req, res, next) {
+    sql.connect(config).then(pool => {
+        console.log('Connected to SQL Server successfully.');
+        req.dbPool = pool;
+        odataServer.handle(req, res).catch(error => {
+            console.error('Error handling OData request:', error);
+        });
+    }).catch(error => {
+        console.error('Error connecting to SQL Server:', error);
+        res.status(500).send('Error connecting to SQL Server: ' + error.message);
+    });
 });
-
-
 
 app.get('/', (req, res) => { // <-- 追加
   res.status(200).send('OK');
