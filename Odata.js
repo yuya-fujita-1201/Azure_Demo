@@ -1,54 +1,43 @@
-const Connection = require('tedious').Connection;
-const Request = require('tedious').Request;
+const express = require('express');
+const sql = require('mssql');
 const ODataServer = require("simple-odata-server");
 
-let model = {
-    namespace: "AzureDB",
+const app = express();
+
+const model = {
+    namespace: "mySampleDatabase",
     entityTypes: {
         "MyTableType": {
-            "KeyValue": {"type": "Edm.String", key: true},
+            "_id": {"type": "Edm.String", key: true},
             "Item1": {"type": "Edm.String"},
             "Item2": {"type": "Edm.String"},
             "Item3": {"type": "Edm.String"}
         }
-    }, 
+    },   
     entitySets: {
-        "myTable": {
-            entityType: "AzureDB.MyTableType"
+        "MyTables": {
+            entityType: "mySampleDatabase.MyTableType"
         }
     }
 };
 
+const odataServer = ODataServer().model(model);
 
-let odataServer = ODataServer().model(model);
+const config = {
+    server: 'yuya-test-2023.database.windows.net',
+    database: 'mySampleDatabase',
+    user: 'azureuser',
+    password: 'Samyfx00',
+    options: {
+        encrypt: true
+    }
+};
 
-odataServer.onMongo(function(cb) {
-    let config = {
-        authentication: {
-            options: {
-                userName: 'azureuser', // replace with your username
-                password: 'Samyfx00'  // replace with your password
-            },
-            type: 'default'
-        },
-        server: 'yuya-test-2023.database.windows.net', // replace with your server name
-        options: {
-            database: 'mySampleDatabase', // replace with your database name
-            encrypt: true
-        }
-    };
-
-    let connection = new Connection(config);
-    connection.on('connect', function(err) {
-        if(err) {
-            console.log('Error: ', err)
-        }
-        else {
-            cb(null, connection);
-        }
-    });
+app.use("/odata", function (req, res) {
+    req.dbPool = sql.connect(config);
+    odataServer.handle(req, res);
 });
 
-odataServer.listen(3000, function() {
-    console.log('OData server listening at http://localhost:3000');
+app.listen(process.env.PORT || 3000, function () {
+    console.log('OData service is running on port 3000');
 });
