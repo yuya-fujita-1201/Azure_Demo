@@ -44,7 +44,7 @@ app.get('/', (req, res) => { // <-- 追加
   res.status(200).send('OK');
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 app.listen(port, function () {
     console.log(`OData service is running on port ${port}`);
 });
