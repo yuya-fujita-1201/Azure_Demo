@@ -1,10 +1,10 @@
 const express = require('express');
 const sql = require('mssql');
 const ODataServer = require("simple-odata-server");
-const cors = require('cors'); // <-- 追加
+const cors = require('cors');
 
 const app = express();
-app.use(cors()); // <-- 追加
+app.use(cors());
 
 const model = {
     namespace: "mySampleDatabase",
@@ -40,7 +40,7 @@ app.use("/odata", function (req, res) {
     odataServer.handle(req, res);
 });
 
-app.get('/health', (req, res) => {
+app.get('/', (req, res) => { // <-- 追加
   res.status(200).send('OK');
 });
 
