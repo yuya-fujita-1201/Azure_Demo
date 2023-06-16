@@ -1,7 +1,17 @@
 {
+  "name": "my-app",
+  "version": "1.0.0",
+  "description": "My Azure App",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "mssql": "^9.1.1",
     "odata-server": "^1.3.7",
     "tedious": "^16.1.0"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
