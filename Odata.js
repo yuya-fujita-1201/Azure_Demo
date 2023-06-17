@@ -42,17 +42,18 @@ app.use("/odata", async function (req, res, next) {
         req.dbPool = pool;
         odataServer.query(async (sql, sqlParams) => {
             const result = await pool.request().query(sql);
+            console.log('SQL query result:', result.recordset);
             return result.recordset;
         });
         try {
             await odataServer.handle(req, res);
         } catch (error) {
             console.error('Error handling OData request:', error);
-            next(error);
+            res.status(500).send(error.message);
         }
     } catch (error) {
         console.error('Error connecting to SQL Server:', error);
-        next(error);
+        res.status(500).send(error.message);
     }
 });
 
