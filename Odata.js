@@ -35,19 +35,24 @@ const config = {
     }
 };
 
-app.use("/odata", function (req, res) {
-    sql.connect(config).then(pool => {
+app.use("/odata", async function (req, res, next) {
+    try {
+        const pool = await sql.connect(config);
         console.log('Connected to SQL Server successfully.');
         req.dbPool = pool;
         odataServer.query((sql, sqlParams) => {
             return pool.request().query(sql);
         });
-        odataServer.handle(req, res).catch(error => {
+        try {
+            await odataServer.handle(req, res);
+        } catch (error) {
             console.error('Error handling OData request:', error);
-        });
-    }).catch(error => {
+            next(error);
+        }
+    } catch (error) {
         console.error('Error connecting to SQL Server:', error);
-    });
+        next(error);
+    }
 });
 
 app.get('/', (req, res) => {
