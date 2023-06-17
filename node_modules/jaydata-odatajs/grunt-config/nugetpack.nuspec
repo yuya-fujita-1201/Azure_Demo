@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <title>Olingo OData Client for JavaScript</title>
+    <id>odatajs</id>
+    <tags>restful api open protocol odata client javascript</tags>
+    <version>4.0.1</version>
+    <authors>Apache Olingo (Challen He, Kobler-Morris Sven)</authors>
+    <owners>Apache Olingo</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <copyright>Copyright 2014 The Apache Software Foundation</copyright>
+    <projectUrl>http://olingo.apache.org/</projectUrl>
+    <iconUrl>http://olingo.apache.org/img/OlingoOrangeTM.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <summary>JavaScript library to easily interact with OData V4 service.</summary>
+    <description>Olingo OData Client for JavaScript (odatajs) is a lightweight cross-browser JavaScript library that enables web browser to consume and interact with OData V4 service.</description>
+    <releaseNotes>
+      This odatajs library for OData V4 is a new version based on datajs(http://datajs.codeplex.com/) which is for OData V3.
+    </releaseNotes>
+  </metadata>
+  <files>
+    <file src="..\LICENS*E" target="odatajs\" />
+    <file src="..\NOTIC*E" target="odatajs\" />
+    <file src="..\DEPENDENCIE*S" target="odatajs\" />
+    <file src="..\_build\lib\*" target="odatajs\" />
+  </files>
+</package>

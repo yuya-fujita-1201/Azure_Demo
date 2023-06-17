@@ -1,0 +1,67 @@
+{
+  "name": "jaydata-promise-handler",
+  "description": "JayData Promise Handler",
+  "main": "lib/promise.js",
+  "keywords": [
+    "HTML5 data management",
+    "JavaScript",
+    "promise",
+    "cross-platform",
+    "iPhone",
+    "Android"
+  ],
+  "version": "0.0.1",
+  "homepage": "http://jaydata.org",
+  "author": {
+    "name": "JayData",
+    "url": "http://jaydata.org"
+  },
+  "dependencies": {
+    "extend": "^3.0.0",
+    "jaydata-error-handler": "^0.0.1"
+  },
+  "contributors": [
+    {
+      "name": "Dániel József"
+    },
+    {
+      "name": "Hajnalka Battancs"
+    },
+    {
+      "name": "János Roden"
+    },
+    {
+      "name": "László Horváth"
+    },
+    {
+      "name": "Péter Zentai"
+    },
+    {
+      "name": "Péter Nochta"
+    },
+    {
+      "name": "Róbert Bónay"
+    },
+    {
+      "name": "Szabolcs Czinege"
+    },
+    {
+      "name": "Viktor Borza"
+    },
+    {
+      "name": "Viktor Lázár"
+    },
+    {
+      "name": "Zoltán Gyebrovszki"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jaystack/jaydata-promise-handler.git"
+  },
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "license": "(MIT OR GPL-2.0)",
+  "devDependencies": {}
+}

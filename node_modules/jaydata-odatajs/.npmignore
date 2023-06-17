@@ -1,0 +1,24 @@
+# ignore local stuff starting with an underscore
+_*
+
+# ignore IDE settings
+.idea
+
+# ignore local config
+localgrunt.config
+
+# testing copies
+../demo/scripts/odatajs-4.0.0-*
+
+# build artefacts
+#build/
+
+# nodejs temporary objects
+node_modules/
+
+# C.net server temporary objects
+bin/
+obj/
+packages/
+JSLib.suo
+JSLib.csproj.user

@@ -1,0 +1,235 @@
+<!--
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+ -->
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <title>datajs startup perf test</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type="text/javascript" src="./../_build/lib/odatajs-latest.js"></script>
+        <script type="text/javascript" src="scripts/tools.js" ></script>
+        <style type="text/css">
+            .code{font-family:"Courier New",monospace;font-size:13px;line-height:18px;}
+            .code ul{list-style:none;margin:0 0 0 1.5em;padding:0;}
+            .code li{position:relative;}
+            .code.json li:after{content:',';}
+            .code.json li:last-child:after{content:'';}
+            .code span{white-space:nowrap;padding:2px 1px;}
+            .code .property{font-weight:bold;color:#000000;}
+            .code .null{color:#9d261d;}
+            .code .boolean{color:#760a85;}
+            .code .numeric{color:#0076cb;}
+            .code .string{color:#247230;}
+            .code .deffered{color:#666666;font-size:0.9em;}
+            .code .toggle{position:absolute;left:-1em;cursor:pointer;}
+            .code .tag{color:#003283;}
+            .code .atn{color:#760a85;}
+            .code .atv{color:#247230;}
+            .code .text{color:#000000;}
+            .code .cdata{color:#008080;}
+            .code .comment,.code .ns{color:#666666;}
+
+            .left {
+                margin-left : 20px;
+                position:relative;
+            }
+
+        </style>
+    </head>   
+    <body>
+        <table><tr><td valign="top" width="150px">
+            Metadata<br>
+            <input type="radio" id="inMetadata1" name="inMetadata" value="none"/>                       
+            <label for="inMetadata1">none</label><br>
+
+            <input type="radio" id="inMetadata2" name="inMetadata" value="minimal" checked="checked"/>  
+            <label for="inMetadata2">minimal<br>
+            <div class="left">                                   
+                <input type="checkbox" id="inMinimalToFull">                                   
+                <label for="inMinimalToFull" id="lblInMinimalToFull">minimal to full</label><br>
+            </div>
+
+            <input type="radio" id="inMetadata3" name="inMetadata" value="full"><label for="inMetadata3">full</label>
+            <br>
+            Recognize Dates<br>
+            <input type="checkbox" id="inRecognizeDates"><label for="check1">yes/no</label><br>
+
+        </td><td>
+            <div id="buttons"></div>
+        </td><td>
+            <button id="btnMetaData">MetaData</button><br/>
+            <button id="btnPOST_entry_food">POST food entry</button><br/>
+            <button id="btnPOST_entry_categorie">POST categorie entry</button><br/>
+        </td></tr></table>
+        <div id='resultsArea' data-type="json">
+        </div>
+        <script>
+            // Config
+            var config = [
+                { name: 'Feed', url: 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods'},
+                { name: 'Entry', url: 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)'},
+                { name: 'Collection of Complex', url: 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Providers'},
+                { name: 'Collection of Simple', url: 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/AlternativeNames'},
+                { name: 'Complex property', url: 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Packaging'},
+                { name: 'Simple property', url: 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods(0)/Name'},
+            ];
+
+            // UI Stuff
+            var createButtonClickHandler = function(nr) {
+                return function() { buttonClick(nr);};
+            };
+
+            var buttonRoot = $('#buttons');
+            $("input[name*='inMetadata'").click( function() {
+                var metadata = $("input[name*='inMetadata']:checked").val();
+                if (metadata === "minimal") {
+                    $("#lblInMinimalToFull").css('color', '#000000');
+                    $("#inMinimalToFull").removeAttr('disabled');
+                } else {
+                    $("#lblInMinimalToFull").css('color', '#999999');
+                    $("#inMinimalToFull").attr('disabled','disabled');
+                }
+            });
+
+            for (var i = 0; i < config.length; i++) {
+                var button = $('<button id="btnArray">'+config[i].name+'</button><br/>"');
+                button.click( createButtonClickHandler(i));
+                buttonRoot.append(button);
+            }
+
+            // Testing 
+            function buttonClick(configNr) {
+                var metadata = $("input[name*='inMetadata']:checked").val();
+                var recognizeDates  = $("#inRecognizeDates").is(":checked") ? true : false;
+                var inMinimalToFull = $("#inMinimalToFull").is(":checked")  ? true : false;
+
+                var requestUri = {
+                    requestUri : config[configNr].url
+                };
+
+                requestUri.recognizeDates = recognizeDates;
+
+                var metaDatasuccess = function(metadata){
+                    odatajs.oData.read(requestUri, success, errorFunc, null, null, metadata);
+                };
+
+                if ( metadata === 'full') {
+                    requestUri.headers =  { Accept : 'application/json;odata.metadata=full' };
+                    odatajs.oData.read(requestUri, success, errorFunc);
+                } else if ( metadata === 'minimal') {
+                    requestUri.headers =  { Accept : 'application/json;odata.metadata=minimal' };
+                    if (inMinimalToFull) {
+                        getMetaData(metaDatasuccess);
+                    } else {
+                        odatajs.oData.read(requestUri, success, errorFunc);   
+                    }
+                } else {
+                    requestUri.headers =  { Accept : 'application/json;odata.metadata=none' };
+                    odatajs.oData.read(requestUri, success, errorFunc);
+                }
+            }
+
+            function show(data) {
+                $('#resultsArea').empty();
+                var code = $('<code data-type="json"></code>').text(JSON.stringify(data));
+                $('#resultsArea').append(code);
+                $('code[data-type]').prettify();
+            }
+            function success(data) {
+                show(data);
+            }
+
+            function errorFunc(err) {
+                $('#resultsArea').empty();
+                $("#resultsArea").text(JSON.stringify(err));
+            }
+
+            function getMetaData(metaDatasuccess) {
+                var oHeaders = {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=full',
+                    "Odata-Version": "4.0",
+                    "OData-MaxVersion": "4.0",
+                    "Prefer": "odata.allow-entityreferences"
+                };
+                var metadataRequest =
+                {
+                    headers: oHeaders,
+                    requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", 
+                    data: null,
+                };
+                odatajs.oData.read(metadataRequest, metaDatasuccess, errorFunc,odatajs.oData.metadataHandler);
+            }
+
+            /*******Special buttons***********/           
+
+            $('#btnMetaData').on("click", function(){
+                var oHeaders = {
+                    'Accept': 'text/html,application/xhtml+xml,application/xml,application/json;odata.metadata=full',
+                    "Odata-Version": "4.0",
+                    "OData-MaxVersion": "4.0",
+                    "Prefer": "odata.allow-entityreferences"
+                };
+                var metadataRequest =
+                {
+                    headers: oHeaders,
+                    requestUri: "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata", 
+                    data: null,
+                };
+
+                odatajs.oData.read(metadataRequest, success, errorFunc,odatajs.oData.metadataHandler);
+            });
+
+            $('#btnPOST_entry_food').on("click", function(){
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Foods',
+                    method: 'POST',
+                    headers : { Accept : 'application/json' },
+                    recognizeDates : true,
+                    data : {
+                        "@odata.type": "#DataJS.Tests.V4.Food",
+                        "@odata.context": "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Foods/$entity",
+                        FoodID: 111,
+                        Name: "flour1"
+                    }
+                };
+                odatajs.oData.read(requestUri, success, errorFunc);
+            });
+            $('#btnPOST_entry_categorie').on("click", function(){
+
+                var requestUri = {
+                    requestUri : 'http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/Categories',
+                    method: 'POST',
+                    headers : { Accept : 'application/json' },
+                    recognizeDates : true,
+                    data : {
+                        "@odata.type": "#DataJS.Tests.V4.Category",
+                        "@odata.context": "http://localhost:4002/tests/endpoints/FoodStoreDataServiceV4.svc/$metadata#Categories/$entity",
+                        CategoryID: 111,
+                        Name: "cat111"
+                    }
+                };
+                odatajs.oData.read(requestUri, success, errorFunc);
+            });
+
+
+
+        </script>
+    </body>
+</html>

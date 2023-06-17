@@ -1,0 +1,64 @@
+{
+  "name": "jaydata-error-handler",
+  "description": "JayData Error Handler",
+  "main": "lib/errorHandler.js",
+  "keywords": [
+    "HTML5 data management",
+    "JavaScript",
+    "error",
+    "exception",
+    "guard",
+    "cross-platform",
+    "iPhone",
+    "Android"
+  ],
+  "version": "0.0.1",
+  "homepage": "http://jaydata.org",
+  "author": {
+    "name": "JayData",
+    "url": "http://jaydata.org"
+  },
+  "contributors": [
+    {
+      "name": "Dániel József"
+    },
+    {
+      "name": "Hajnalka Battancs"
+    },
+    {
+      "name": "János Roden"
+    },
+    {
+      "name": "László Horváth"
+    },
+    {
+      "name": "Péter Zentai"
+    },
+    {
+      "name": "Péter Nochta"
+    },
+    {
+      "name": "Róbert Bónay"
+    },
+    {
+      "name": "Szabolcs Czinege"
+    },
+    {
+      "name": "Viktor Borza"
+    },
+    {
+      "name": "Viktor Lázár"
+    },
+    {
+      "name": "Zoltán Gyebrovszki"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jaystack/jaydata-error-handler.git"
+  },
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "license": "(MIT OR GPL-2.0)"
+}
