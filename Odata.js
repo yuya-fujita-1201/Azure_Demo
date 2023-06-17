@@ -1,6 +1,6 @@
 const express = require('express');
 const sql = require('mssql');
-const odataServer = require('odata-server');
+const ODataServer = require("simple-odata-server");
 const cors = require('cors');
 
 const app = express();
@@ -23,6 +23,8 @@ const model = {
     }
 };
 
+const odataServer = ODataServer().model(model);
+
 const config = {
     server: 'yuya-test-2023.database.windows.net',
     database: 'mySampleDatabase',
@@ -33,34 +35,34 @@ const config = {
     }
 };
 
-let odataInstance = new odataServer().model(model);
-app.use("/odata", async function (req, res) {
+app.use("/odata", async function (req, res, next) {
     try {
         const pool = await sql.connect(config);
         console.log('Connected to SQL Server successfully.');
-        req.sql = pool;
-        odataInstance.query(async function(sql, sqlParams) {
-            const request = pool.request();
-            sqlParams.forEach((param, i) => {
-                request.input(`p${i}`, param);
-            });
-            return await request.query(sql);
+        req.dbPool = pool;
+        odataServer.query((sql, sqlParams) => {
+            return pool.request().query(sql);
         });
-        await odataInstance.handle(req, res);
+        try {
+            await odataServer.handle(req, res);
+        } catch (error) {
+            console.error('Error handling OData request:', error);
+            next(error);
+        }
     } catch (error) {
-        console.error('Error:', error);
-        res.status(500).send(error.message);
+        console.error('Error connecting to SQL Server:', error);
+        next(error);
     }
 });
 
 app.get('/', (req, res) => {
-    res.status(200).send('OK');
+  res.status(200).send('OK');
 });
 
 app.get('/test', async (req, res) => {
     try {
-        const pool = await sql.connect(config);
-        const result = await pool.request().query('SELECT * FROM MyTable');
+        await sql.connect(config);
+        const result = await sql.query`SELECT * FROM MyTable`;
         res.json(result.recordset);
     } catch (err) {
         res.status(500).send(err.message);
