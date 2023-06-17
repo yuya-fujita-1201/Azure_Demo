@@ -17,7 +17,7 @@ const model = {
         }
     },   
     entitySets: {
-        "MyTable": {
+        "GetMyTableData": {
             entityType: "mySampleDatabase.MyTableType"
         }
     }
