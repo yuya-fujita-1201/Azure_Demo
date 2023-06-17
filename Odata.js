@@ -40,8 +40,9 @@ app.use("/odata", async function (req, res, next) {
         const pool = await sql.connect(config);
         console.log('Connected to SQL Server successfully.');
         req.dbPool = pool;
-        odataServer.query((sql, sqlParams) => {
-            return pool.request().query(sql);
+        odataServer.query(async (sql, sqlParams) => {
+            const result = await pool.request().query(sql);
+            return result.recordset;
         });
         try {
             await odataServer.handle(req, res);
