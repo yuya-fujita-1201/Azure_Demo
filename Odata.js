@@ -57,32 +57,6 @@ app.use("/odata", async function (req, res, next) {
     }
 });
 
-app.get('/', (req, res) => {
-    res.status(200).send('OK');
-});
-
-app.get('/test', async (req, res) => {
-    try {
-        await sql.connect(config);
-        const result = await sql.query`SELECT * FROM MyTable`;
-        res.json(result.recordset);
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
-});
-
-// メタデータエンドポイントの追加
-app.get('/odata/$metadata', async (req, res) => {
-    try {
-        const metadata = odataServer.writeMetadata();
-        res.type('application/xml');
-        res.send(metadata);
-    } catch (error) {
-        console.error('Error retrieving OData metadata:', error);
-        res.status(500).send(error.message);
-    }
-});
-
 const port = process.env.PORT || 80;
 app.listen(port, function () {
     console.log(`OData service is running on port ${port}`);
