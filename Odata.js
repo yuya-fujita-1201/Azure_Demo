@@ -10,12 +10,12 @@ const model = {
     namespace: "mySampleDatabase",
     entityTypes: {
         "MyTableType": {
-            "KeyValue": {"type": "Edm.String", key: true},
-            "Item1": {"type": "Edm.String"},
-            "Item2": {"type": "Edm.String"},
-            "Item3": {"type": "Edm.String"}
+            "KeyValue": { "type": "Edm.String", key: true },
+            "Item1": { "type": "Edm.String" },
+            "Item2": { "type": "Edm.String" },
+            "Item3": { "type": "Edm.String" }
         }
-    },   
+    },
     entitySets: {
         "MyTable": {
             entityType: "mySampleDatabase.MyTableType"
@@ -58,7 +58,7 @@ app.use("/odata", async function (req, res, next) {
 });
 
 app.get('/', (req, res) => {
-  res.status(200).send('OK');
+    res.status(200).send('OK');
 });
 
 app.get('/test', async (req, res) => {
@@ -68,6 +68,18 @@ app.get('/test', async (req, res) => {
         res.json(result.recordset);
     } catch (err) {
         res.status(500).send(err.message);
+    }
+});
+
+// メタデータエンドポイントの追加
+app.get('/odata/$metadata', async (req, res) => {
+    try {
+        const metadata = odataServer.writeMetadata();
+        res.type('application/xml');
+        res.send(metadata);
+    } catch (error) {
+        console.error('Error retrieving OData metadata:', error);
+        res.status(500).send(error.message);
     }
 });
 
