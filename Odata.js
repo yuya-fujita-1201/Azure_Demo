@@ -1,66 +1,66 @@
 const express = require('express');
 const sql = require('mssql');
-const JayData = require('jaydata');
-const odata = require('jaydata/odata-server');
+const odataServer = require('odata-server');
 const cors = require('cors');
 
 const app = express();
 app.use(cors());
 
-class MyTable extends JayData.Entity {
-    constructor(initData) {
-        super(initData);
-    }
-}
-
-MyTable.prototype.KeyValue = { type: 'Edm.String', key: true };
-MyTable.prototype.Item1 = { type: 'Edm.String' };
-MyTable.prototype.Item2 = { type: 'Edm.String' };
-MyTable.prototype.Item3 = { type: 'Edm.String' };
-
-app.use("/odata", odata("odata", {
-    MyTable: MyTable
-}, function (req, res) {
-    const config = {
-        server: 'yuya-test-2023.database.windows.net',
-        database: 'mySampleDatabase',
-        user: 'azureuser',
-        password: 'Samyfx00',
-        options: {
-            encrypt: true
+const model = {
+    namespace: "mySampleDatabase",
+    entityTypes: {
+        "MyTableType": {
+            "KeyValue": {"type": "Edm.String", key: true},
+            "Item1": {"type": "Edm.String"},
+            "Item2": {"type": "Edm.String"},
+            "Item3": {"type": "Edm.String"}
         }
-    };
+    },   
+    entitySets: {
+        "MyTable": {
+            entityType: "mySampleDatabase.MyTableType"
+        }
+    }
+};
 
-    sql.connect(config).then(pool => {
+const config = {
+    server: 'yuya-test-2023.database.windows.net',
+    database: 'mySampleDatabase',
+    user: 'azureuser',
+    password: 'Samyfx00',
+    options: {
+        encrypt: true
+    }
+};
+
+let odataInstance = new odataServer().model(model);
+app.use("/odata", async function (req, res) {
+    try {
+        const pool = await sql.connect(config);
         console.log('Connected to SQL Server successfully.');
-        return pool.request().query('SELECT * FROM MyTable')
-            .then(result => {
-                res.setHeader('Content-Type', 'application/json');
-                res.status(200).send(result.recordset);
+        req.sql = pool;
+        odataInstance.query(async function(sql, sqlParams) {
+            const request = pool.request();
+            sqlParams.forEach((param, i) => {
+                request.input(`p${i}`, param);
             });
-    }).catch(error => {
-        console.error('Error connecting to SQL Server:', error);
-        res.status(500).send('Error connecting to SQL Server: ' + error);
-    });
-}));
+            return await request.query(sql);
+        });
+        await odataInstance.handle(req, res);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send(error.message);
+    }
+});
 
 app.get('/', (req, res) => {
     res.status(200).send('OK');
 });
 
 app.get('/test', async (req, res) => {
-    const config = {
-        server: 'yuya-test-2023.database.windows.net',
-        database: 'mySampleDatabase',
-        user: 'azureuser',
-        password: 'Samyfx00',
-        options: {
-            encrypt: true
-        }
-    };
     try {
-        await sql.connect(config);
-        const result = await sql.query`SELECT * FROM MyTable`;
+        const pool = await sql.connect(config);
+        const result = await pool.request().query('SELECT * FROM MyTable');
         res.json(result.recordset);
     } catch (err) {
         res.status(500).send(err.message);
