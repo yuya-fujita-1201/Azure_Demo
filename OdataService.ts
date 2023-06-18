@@ -2,6 +2,18 @@ import express from 'express';
 import sql from 'mssql';
 import { ODataServer, ODataController, Edm, odata, ODataQuery } from 'odata-v4-server';
 
+// SQL Server connection config
+const sqlConfig = {
+    user: 'azureuser',
+    password: 'Samyfx00',
+    server: 'yuya-test-2023.database.windows.net',
+    database: 'mySampleDatabase',
+    // other options...
+};
+
+// Make sure to connect to the database
+sql.connect(sqlConfig).catch(err => console.error('Failed to connect to the database:', err));
+
 @odata.type('DataModel')
 class DataModel {
     @Edm.Key
@@ -30,5 +42,5 @@ const app = express();
 app.use('/odata', MyODataServer.create());
 
 app.listen(80, () => {
-    console.log('Server is running at http://localhost:3000');
+    console.log('Server is running at http://localhost:80');
 });
