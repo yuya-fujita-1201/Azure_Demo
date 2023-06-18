@@ -29,6 +29,6 @@ MyODataServer.addController(DataController, true);
 const app = express();
 app.use('/odata', MyODataServer.create());
 
-app.listen(3000, () => {
+app.listen(80, () => {
     console.log('Server is running at http://localhost:3000');
 });
