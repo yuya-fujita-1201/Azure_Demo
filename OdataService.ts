@@ -14,29 +14,35 @@ const sqlConfig = {
 // Make sure to connect to the database
 sql.connect(sqlConfig).catch(err => console.error('Failed to connect to the database:', err));
 
-@odata.type('DataModel')
-class DataModel {
+@odata.type('MyTable')
+class MyTable {
     @Edm.Key
     @Edm.Computed
     @Edm.Int32
-    public Id: number = 0;
+    public KeyValue: number = 0;
 
     @Edm.String
-    public Name: string = "";
+    public Item1: string = "";
+
+    @Edm.String
+    public Item2: string = "";
+
+    @Edm.String
+    public Item3: string = "";
 }
 
-class DataController extends ODataController {
+class MyTableController extends ODataController {
     @odata.GET
-    public async get(@odata.query query: ODataQuery): Promise<DataModel[]> {
+    public async get(@odata.query query: ODataQuery): Promise<MyTable[]> {
         const request = new sql.Request();
         const result = await request.query(`SELECT * FROM MyTable`);
-        return result.recordset.map((record: any) => Object.assign(new DataModel(), record));
+        return result.recordset.map((record: any) => Object.assign(new MyTable(), record));
     }
 }
 
 class MyODataServer extends ODataServer {}
 
-MyODataServer.addController(DataController, true);
+MyODataServer.addController(MyTableController, '/MyTable');
 
 const app = express();
 app.use('/odata', MyODataServer.create());
