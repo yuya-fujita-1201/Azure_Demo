@@ -2,9 +2,9 @@
   "name": "odata-service",
   "version": "1.0.0",
   "description": "An OData service built with Node.js and TypeScript",
-  "main": "dist/server.js",
+  "main": "odata.js",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "node odata.js",
     "build": "tsc -p ."
   },
   "dependencies": {
