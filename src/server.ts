@@ -2,20 +2,13 @@
 import express from 'express';
 import { ODataServer, ODataController, odata, ODataQuery } from 'odata-v4-server';
 import { connectToSql } from './OdataService';
-import { MyTableType, UserDetails } from './models';  // Import UserDetails
+import { MyTableType, UserDetails } from './models';
 import sql from 'mssql';
 
-// Define controller for the MyTable entity
 class MyTableController extends ODataController {
-    @odata.GET
-    public async get(@odata.query query: ODataQuery): Promise<MyTableType[]> {
-        const request = new sql.Request();
-        const result = await request.query(`SELECT * FROM MyTable`);
-        return result.recordset.map((record: any) => Object.assign(new MyTableType(), record));
-    }
+    // ...
 }
 
-// Define controller for the UserDetails entity
 class UserDetailsController extends ODataController {
     @odata.GET
     public async get(@odata.query query: ODataQuery): Promise<UserDetails[]> {
@@ -25,12 +18,14 @@ class UserDetailsController extends ODataController {
     }
 }
 
-@odata.namespace('mySampleDatabase')  // Add this line
+@odata.namespace('mySampleDatabase')
 class MyODataServer extends ODataServer {}
 
-// Add controllers to the server
-MyODataServer.addController(MyTableController, 'MyTableType');  // Change 'MyTable' to 'MyTableType'
-MyODataServer.addController(UserDetailsController, 'UserDetails');  // Add UserDetails controller
+MyODataServer.addController(MyTableController, 'MyTableType');
+MyODataServer.addController(UserDetailsController, 'UserDetails');
+
+// Remaining code...
+
 
 const app = express();
 

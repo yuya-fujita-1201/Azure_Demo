@@ -1,7 +1,7 @@
 // models.ts
 import { Edm, odata } from 'odata-v4-server';
 
-@odata.type('MyTableType')  // Change 'mySampleDatabase.MyTableType' to 'MyTableType'
+@odata.type('MyTableType')
 export class MyTableType {
     @Edm.Key
     @Edm.Computed
@@ -18,7 +18,7 @@ export class MyTableType {
     public Item3: string = "";
 }
 
-@odata.type('UserDetails')  // New entity
+@odata.type('UserDetails')
 export class UserDetails {
     @Edm.Key
     @Edm.String
