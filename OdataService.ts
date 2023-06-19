@@ -15,7 +15,7 @@ const sqlConfig = {
 sql.connect(sqlConfig).catch(err => console.error('Failed to connect to the database:', err));
 
 // Define entity model
-@odata.namespace('MyNamespace')
+@odata.namespace('mySampleDatabase')
 @odata.type('MyTable')
 class MyTable {
     @Edm.Key
@@ -44,7 +44,7 @@ class MyTableController extends ODataController {
 }
 
 // Define the server
-@odata.namespace('MyNamespace')
+@odata.namespace('mySampleDatabase')
 class MyODataServer extends ODataServer {}
 
 // Add controller to the server
