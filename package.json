@@ -4,7 +4,7 @@
   "description": "An OData service built with Node.js and TypeScript",
   "main": "dist/OdataService.js",
   "scripts": {
-    "start": "node dist/OdataService.js",
+    "start": "node dist/server.js",
     "build": "tsc"
   },
   "dependencies": {
