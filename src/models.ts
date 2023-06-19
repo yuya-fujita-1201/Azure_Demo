@@ -1,8 +1,6 @@
 // models.ts
 import { Edm, odata } from 'odata-v4-server';
 
-@odata.type('MyTableType')
-@Edm.OpenType
 export class MyTableType {
     @Edm.Key
     @Edm.Computed
@@ -19,8 +17,6 @@ export class MyTableType {
     public Item3: string = "";
 }
 
-@odata.type('UserDetails')
-@Edm.OpenType
 export class UserDetails {
     @Edm.Key
     @Edm.String
