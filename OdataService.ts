@@ -16,8 +16,8 @@ sql.connect(sqlConfig).catch(err => console.error('Failed to connect to the data
 
 // Define entity model
 @odata.namespace('mySampleDatabase')
-@odata.type('MyTable')
-class MyTable {
+@odata.type('MyTableType')  // change class name to 'MyTableType'
+class MyTableType {         // change class name to 'MyTableType'
     @Edm.Key
     @Edm.Computed
     @Edm.Int32
@@ -36,10 +36,10 @@ class MyTable {
 // Define controller for the entity
 class MyTableController extends ODataController {
     @odata.GET
-    public async get(@odata.query query: ODataQuery): Promise<MyTable[]> {
+    public async get(@odata.query query: ODataQuery): Promise<MyTableType[]> {  // change return type to 'MyTableType[]'
         const request = new sql.Request();
         const result = await request.query(`SELECT * FROM MyTable`);
-        return result.recordset.map((record: any) => Object.assign(new MyTable(), record));
+        return result.recordset.map((record: any) => Object.assign(new MyTableType(), record));  // change 'new MyTable()' to 'new MyTableType()'
     }
 }
 
