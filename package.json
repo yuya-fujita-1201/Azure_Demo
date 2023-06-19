@@ -4,8 +4,8 @@
   "description": "An OData service built with Node.js and TypeScript",
   "main": "dist/server.js",
   "scripts": {
-    "start": "npm run build && node dist/server.js",
-    "build": "tsc"
+    "start": "node dist/server.js",
+    "build": "tsc -p ."
   },
   "dependencies": {
     "express": "^4.17.1",
