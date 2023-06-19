@@ -1,7 +1,7 @@
 // models.ts
 import { Edm, odata } from 'odata-v4-server';
 
-@odata.type('mySampleDatabase.MyTableType')
+@odata.type('MyTableType')  // Change 'mySampleDatabase.MyTableType' to 'MyTableType'
 export class MyTableType {
     @Edm.Key
     @Edm.Computed

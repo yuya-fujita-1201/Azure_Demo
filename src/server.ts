@@ -15,11 +15,11 @@ class MyTableController extends ODataController {
     }
 }
 
-// Define the server
+@odata.namespace('mySampleDatabase')  // Add this line
 class MyODataServer extends ODataServer {}
 
 // Add controller to the server
-MyODataServer.addController(MyTableController, 'MyTable');
+MyODataServer.addController(MyTableController, 'MyTableType');  // Change 'MyTable' to 'MyTableType'
 
 const app = express();
 
