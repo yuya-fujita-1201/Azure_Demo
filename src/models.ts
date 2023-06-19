@@ -17,3 +17,22 @@ export class MyTableType {
     @Edm.String
     public Item3: string = "";
 }
+
+@odata.type('UserDetails')  // New entity
+export class UserDetails {
+    @Edm.Key
+    @Edm.String
+    public SFID: string = "";
+
+    @Edm.String
+    public FirstName: string = "";
+
+    @Edm.String
+    public LastName: string = "";
+
+    @Edm.String
+    public Address: string = "";
+
+    @Edm.String
+    public Comment: string = "";
+}
