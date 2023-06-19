@@ -14,6 +14,7 @@ const sqlConfig = {
 // Make sure to connect to the database
 sql.connect(sqlConfig).catch(err => console.error('Failed to connect to the database:', err));
 
+// Define entity model
 @odata.type('MyNamespace.MyTable')
 class MyTable {
     @Edm.Key
@@ -31,6 +32,7 @@ class MyTable {
     public Item3: string = "";
 }
 
+// Define controller for the entity
 class MyTableController extends ODataController {
     @odata.GET
     public async get(@odata.query query: ODataQuery): Promise<MyTable[]> {
@@ -40,13 +42,18 @@ class MyTableController extends ODataController {
     }
 }
 
+// Define the server
 class MyODataServer extends ODataServer {}
 
+// Add controller to the server
 MyODataServer.addController(MyTableController, 'MyTable');
 
 const app = express();
+
+// Setup OData middleware
 app.use('/odata', MyODataServer.create());
 
+// Start the server
 app.listen(80, () => {
     console.log('Server is running at http://localhost:80');
 });
