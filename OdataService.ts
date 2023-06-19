@@ -14,7 +14,7 @@ const sqlConfig = {
 // Make sure to connect to the database
 sql.connect(sqlConfig).catch(err => console.error('Failed to connect to the database:', err));
 
-@odata.type('MyTable')
+@odata.type('MyNamespace.MyTable')
 class MyTable {
     @Edm.Key
     @Edm.Computed
@@ -42,7 +42,7 @@ class MyTableController extends ODataController {
 
 class MyODataServer extends ODataServer {}
 
-MyODataServer.addController(MyTableController, '/MyTable');
+MyODataServer.addController(MyTableController, 'MyTable');
 
 const app = express();
 app.use('/odata', MyODataServer.create());
