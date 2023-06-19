@@ -46,7 +46,7 @@ class MyTableController extends ODataController {
 class MyODataServer extends ODataServer {}
 
 // Add controller to the server
-MyODataServer.addController(MyTableController, 'MyTable');
+MyODataServer.addController(MyTableController, '/MyNamespace.MyTable');
 
 const app = express();
 
