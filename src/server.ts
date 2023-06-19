@@ -5,10 +5,12 @@ import { connectToSql } from './OdataService';
 import { MyTableType, UserDetails } from './models';
 import sql from 'mssql';
 
+@odata.type(MyTableType)
 class MyTableController extends ODataController {
     // ...
 }
 
+@odata.type(UserDetails)
 class UserDetailsController extends ODataController {
     @odata.GET
     public async get(@odata.query query: ODataQuery): Promise<UserDetails[]> {
@@ -25,7 +27,6 @@ MyODataServer.addController(MyTableController, 'MyTableType');
 MyODataServer.addController(UserDetailsController, 'UserDetails');
 
 // Remaining code...
-
 
 const app = express();
 
